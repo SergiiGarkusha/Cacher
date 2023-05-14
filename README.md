@@ -1,6 +1,8 @@
-Go Cacher helps you to manage memory cache.
+Go Cacher helps you to manage memory cache (go get github.com/SergiiGarkusha/Cacher).
 
 See it in action:
+
+Example:
 
 package main
 
