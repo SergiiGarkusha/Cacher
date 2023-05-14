@@ -1,23 +1,61 @@
 package cache
 
-type Cacher struct {
-	Maps map[string]int64
+import (
+	"errors"
+)
+
+type Cache struct {
+	stor map[string]any
 }
 
-func New() *Cacher {
-	return &Cacher{
-		Maps: make(map[string]int64),
+func New() *Cache {
+	return &Cache{
+		stor: make(map[string]any),
 	}
 }
 
-func (c *Cacher) Set(key string, number int64) {
-	c.Maps[key] = number
+func (c *Cache) Set(key string, value any) error {
+	if err := validateKey(key); err != nil {
+		return err
+	}
+
+	if err := validateValue(value); err != nil {
+		return nil
+	}
+
+	c.stor[key] = value
+
+	return nil
 }
 
-func (c Cacher) Get(key string) int64 {
-	return c.Maps[key]
+func (c Cache) Get(key string) (any, error) {
+	if err := validateKey(key); err != nil {
+		return nil, err
+	}
+
+	return c.stor[key], nil
 }
 
-func (c *Cacher) Delete(key string) {
-	delete(c.Maps, key)
+func (c *Cache) Delete(key string) error {
+
+	if err := validateKey(key); err != nil {
+		return err
+	}
+
+	delete(c.stor, key)
+	return nil
+}
+
+func validateKey(key string) error {
+	if len(key) > 0 {
+		return nil
+	}
+	return errors.New("keyIsEmptyErrText")
+}
+
+func validateValue(value any) error {
+	if value != nil {
+		return nil
+	}
+	return errors.New("valueIsEmptyErrText")
 }
